@@ -20,11 +20,13 @@ HEADERS = \
     include/agpl2.h \
     include/deliberate.h \
     include/config-edit.h \
-    include/cmdoptions.h
+    include/cmdoptions.h \
+    include/editor.h \
 
 SOURCES = \
   src/main.cpp \
     src/version.cpp \
     src/deliberate.cpp \
     src/config-edit.cpp \
-    src/cmdoptions.cpp
+    src/cmdoptions.cpp \
+    src/editor.cpp

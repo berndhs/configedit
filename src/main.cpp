@@ -19,28 +19,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 #include "main.h"
-#include <QGuiApplication>
+#include <QApplication>
 #include <QSettings>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QTimer>
 #include "version.h"
 #include "deliberate.h"
 #include "cmdoptions.h"
+#include "editor.h"
 
 int
 main (int argc, char *argv[])
 {
-  QStringList arglist;
-  for (int a=0;a<argc;++a) {
-    arglist << QString(argv[a]);
-  }
-  qDebug() << Q_FUNC_INFO << argc << arglist;
-  QGuiApplication::setOrganizationName ("BerndStramm");
-  QGuiApplication::setOrganizationDomain ("berndhs.world");
-  QGuiApplication::setApplicationName ("cfgedit");
+  qDebug() << Q_FUNC_INFO;
+  QApplication::setOrganizationName ("BerndStramm");
+  QApplication::setOrganizationDomain ("berndhs.world");
+  QApplication::setApplicationName ("cfgedit");
   deliberate::ProgramVersion pv ("cfgedit");
-  QGuiApplication::setApplicationVersion (pv.Version());
+  QApplication::setApplicationVersion (pv.Version());
   QSettings  settings;
 
   deliberate::InitSettings ();
@@ -55,6 +53,9 @@ main (int argc, char *argv[])
   opts.AddStringOption ("logdebug","L",QObject::tr("write Debug log to file"));
 
   bool optsOk = opts.Parse (argc, argv);
+  QStringList arglist;
+  arglist << opts.Arguments();
+
   if (!optsOk) {
     opts.Usage ();
     return(1);
@@ -76,7 +77,12 @@ main (int argc, char *argv[])
   }
   bool showDebug = opts.SeenOpt ("debug");
   int result;
-  QGuiApplication  app (argc, argv);
+  QApplication  app (argc, argv);
+
+  Editor editor (app);
+  editor.run(arglist[0]);
+
+  QTimer::singleShot(3000,&editor,SLOT(quit()));
 
   result = app.exec();
 
