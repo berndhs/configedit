@@ -18,7 +18,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
-
+#include "main.h"
 #include <QGuiApplication>
 #include <QSettings>
 #include <QString>
@@ -26,6 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include "version.h"
 #include "deliberate.h"
+#include "cmdoptions.h"
 
 int
 main (int argc, char *argv[])
@@ -46,5 +47,38 @@ main (int argc, char *argv[])
   deliberate::SetSettings (settings);
   settings.setValue ("program",pv.MyName());
 
-  return 0;
+
+  QStringList  configMessages;
+
+  deliberate::CmdOptions  opts ("denada");
+  opts.AddSoloOption ("debug","D",QObject::tr("show Debug log window"));
+  opts.AddStringOption ("logdebug","L",QObject::tr("write Debug log to file"));
+
+  bool optsOk = opts.Parse (argc, argv);
+  if (!optsOk) {
+    opts.Usage ();
+    return(1);
+  }
+  if (opts.WantHelp ()) {
+    opts.Usage ();
+    return (0);
+    pv.CLIVersion ();
+    configMessages.append (QString("Built on %1 %2")
+                           .arg (__DATE__).arg(__TIME__));
+    configMessages.append (QObject::tr("Build with Qt %1").arg(QT_VERSION_STR));
+    configMessages.append (QObject::tr("Running with Qt %1").arg(qVersion()));
+    for (int cm=0; cm<configMessages.size(); cm++) {
+      deliberate::StdOut () << configMessages[cm] << endl;
+    }
+    if (opts.WantVersion ()) {
+      return (0);
+    }
+  }
+  bool showDebug = opts.SeenOpt ("debug");
+  int result;
+  QGuiApplication  app (argc, argv);
+
+  result = app.exec();
+
+  return result;
 }

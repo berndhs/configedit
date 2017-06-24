@@ -17,9 +17,13 @@ HEADERS = \
   include/main.h \
     include/version.h \
     include/agpl2.h \
-    include/deliberate.h
+    include/deliberate.h \
+    include/config-edit.h \
+    include/cmdoptions.h
 
 SOURCES = \
   src/main.cpp \
     src/version.cpp \
-    src/deliberate.cpp
+    src/deliberate.cpp \
+    src/config-edit.cpp \
+    src/cmdoptions.cpp
