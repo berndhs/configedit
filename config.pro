@@ -1,6 +1,7 @@
 # qmake .pro file
 
 TEMPLATE = app
+TARGET = cfgedit
 
 QT += gui quick widgets
 

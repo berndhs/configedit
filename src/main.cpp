@@ -38,8 +38,8 @@ main (int argc, char *argv[])
   qDebug() << Q_FUNC_INFO << argc << arglist;
   QGuiApplication::setOrganizationName ("BerndStramm");
   QGuiApplication::setOrganizationDomain ("berndhs.world");
-  QGuiApplication::setApplicationName ("config");
-  deliberate::ProgramVersion pv ("ConfigEdit");
+  QGuiApplication::setApplicationName ("cfgedit");
+  deliberate::ProgramVersion pv ("cfgedit");
   QGuiApplication::setApplicationVersion (pv.Version());
   QSettings  settings;
 
@@ -50,7 +50,7 @@ main (int argc, char *argv[])
 
   QStringList  configMessages;
 
-  deliberate::CmdOptions  opts ("denada");
+  deliberate::CmdOptions  opts (pv.MyName());
   opts.AddSoloOption ("debug","D",QObject::tr("show Debug log window"));
   opts.AddStringOption ("logdebug","L",QObject::tr("write Debug log to file"));
 
