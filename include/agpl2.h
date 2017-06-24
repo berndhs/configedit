@@ -1,4 +1,5 @@
-
+#ifndef AGPL_H
+#define AGPL_H
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -20,3 +21,4 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 
+#endif

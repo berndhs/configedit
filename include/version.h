@@ -1,3 +1,5 @@
+#ifndef DENADA_VERSION_H
+#define DENADA_VERSION_H
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -19,32 +21,32 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 
-#include <QGuiApplication>
-#include <QSettings>
+
 #include <QString>
-#include <QStringList>
-#include <QDebug>
-#include "version.h"
-#include "deliberate.h"
+//#include "delib-debug.h"
 
-int
-main (int argc, char *argv[])
-{
-  QStringList arglist;
-  for (int a=0;a<argc;++a) {
-    arglist << QString(argv[a]);
-  }
-  qDebug() << Q_FUNC_INFO << argc << arglist;
-  QGuiApplication::setOrganizationName ("BerndStramm");
-  QGuiApplication::setOrganizationDomain ("berndhs.world");
-  QGuiApplication::setApplicationName ("config");
-  deliberate::ProgramVersion pv ("ConfigEdit");
-  QGuiApplication::setApplicationVersion (pv.Version());
-  QSettings  settings;
+namespace deliberate {
 
-  deliberate::InitSettings ();
-  deliberate::SetSettings (settings);
-  settings.setValue ("program",pv.MyName());
+class ProgramVersion {
 
-  return 0;
+public:
+
+  ProgramVersion (QString pgmname);
+  
+  static QString Version (); 
+  static QString MyName ();
+  
+  static void ShowVersionWindow ();
+  static void CLIVersion ();
+  
+private:
+
+  static QString VersionNumber;
+  static QString ProgramName;
+  static QString copyright;
+
+};
+
 }
+
+#endif

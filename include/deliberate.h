@@ -1,3 +1,5 @@
+#ifndef DELIBERATE_H
+#define DELIBERATE_H
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -19,32 +21,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 
-#include <QGuiApplication>
+
+#include <stdio.h>
+#include <QTextStream>
 #include <QSettings>
-#include <QString>
-#include <QStringList>
 #include <QDebug>
-#include "version.h"
-#include "deliberate.h"
 
-int
-main (int argc, char *argv[])
-{
-  QStringList arglist;
-  for (int a=0;a<argc;++a) {
-    arglist << QString(argv[a]);
-  }
-  qDebug() << Q_FUNC_INFO << argc << arglist;
-  QGuiApplication::setOrganizationName ("BerndStramm");
-  QGuiApplication::setOrganizationDomain ("berndhs.world");
-  QGuiApplication::setApplicationName ("config");
-  deliberate::ProgramVersion pv ("ConfigEdit");
-  QGuiApplication::setApplicationVersion (pv.Version());
-  QSettings  settings;
 
-  deliberate::InitSettings ();
-  deliberate::SetSettings (settings);
-  settings.setValue ("program",pv.MyName());
+namespace deliberate {
 
-  return 0;
+
+QTextStream  & StdOut();
+
+void SetSettings (QSettings & settings);
+
+void InitSettings ();
+
+QSettings & Settings ();
+
+bool IsMaemo ();
+
+bool IsFingerInterface ();
+
+bool IsIp6Address (QString addr);
+bool IsIp4Address (QString addr);
+
+void Rot1 (QByteArray & data, const QByteArray & key);
+void Rot2 (QByteArray & data, const QByteArray & key);
 }
+
+
+#endif
