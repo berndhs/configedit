@@ -21,4 +21,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 
+#include <QApplication>
+#include <QSettings>
+#include <QString>
+#include <QStringList>
+#include <QDebug>
+#include <QTimer>
+#include "version.h"
+#include "deliberate.h"
+#include "cmdoptions.h"
+#include "editor.h"
 #endif

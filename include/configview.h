@@ -1,6 +1,5 @@
-#ifndef EDITOR_H
-#define EDITOR_H
-
+#ifndef CONFIGVIEW_H
+#define CONFIGVIEW_H
 /****************************************************************
  * This file is distributed under the following license:
  *
@@ -20,32 +19,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
-#include <QApplication>
-#include <QString>
-#include <QWidget>
-#include "config-edit.h"
 
-class Editor : public QWidget
+#include <QQuickItem>
+
+class ConfigView : public QQuickItem
 {
   Q_OBJECT
 public:
-  explicit Editor(QApplication & app,QWidget *parent = 0);
-  ~Editor ();
-
-  void run (const QString &fn);
-
-
+  ConfigView();
 
 signals:
 
 public slots:
-
-  void quit();
-
-private:
-  QApplication  *m_app;
-  deliberate::QmlConfigEdit *m_edit;
-
 };
 
-#endif // EDITOR_H
+#endif // CONFIGVIEW_H

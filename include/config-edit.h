@@ -22,6 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************/
 
 #include <QAbstractListModel>
+#include <QSettings>
 #include <QStringList>
 #include <QString>
 #include <QVariant>
@@ -45,7 +46,6 @@ public:
   QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
   QHash<int, QByteArray> roleNames() const;
 
-  void Run ();
   Q_INVOKABLE void loadView ();
   Q_INVOKABLE void saveView ();
   Q_INVOKABLE void testContent ();
@@ -53,7 +53,7 @@ public:
                                 const QString & key,
                                 const QVariant & value);
 
-  void Load ();
+  void Load (const QString & fileName);
 
 private slots:
 
@@ -79,6 +79,14 @@ private:
                 const QVariant & val,   Kind ki,
                 int lev);
     ConfigItem (const ConfigItem & other);
+    const QString  toString() const {
+      return QString ("<group:")+group
+          + "/ key:" + key
+          + QString("/ value: %1").arg(value.toString())
+          + QString("/kind: %1").arg(int(kind))
+          + QString("/level: %1>").arg(level)
+          ;
+    }
 
     QString            group;
     QString            key;
@@ -105,6 +113,8 @@ private:
   QHash<int, QByteArray> m_roles;
   QStringList          exemptGroups;
   QList <ConfigItem>   configRows;
+  QString              m_fileName;
+  QSettings            *m_zett;
 
 };
 

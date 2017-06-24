@@ -19,16 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 #include "main.h"
-#include <QApplication>
-#include <QSettings>
-#include <QString>
-#include <QStringList>
-#include <QDebug>
-#include <QTimer>
-#include "version.h"
-#include "deliberate.h"
-#include "cmdoptions.h"
-#include "editor.h"
 
 int
 main (int argc, char *argv[])
@@ -60,9 +50,8 @@ main (int argc, char *argv[])
     opts.Usage ();
     return(1);
   }
-  if (opts.WantHelp ()) {
+  if (opts.WantVersion() || opts.WantHelp ()) {
     opts.Usage ();
-    return (0);
     pv.CLIVersion ();
     configMessages.append (QString("Built on %1 %2")
                            .arg (__DATE__).arg(__TIME__));

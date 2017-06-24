@@ -7,9 +7,13 @@ QT += gui quick widgets
 
 CONFIG += c++11
 
-OBJECTS_DIR = tmp
+OBJECTS_DIR = obj
 MOC_DIR = tmp
 UI_DIR = tmp
+RCC_DIR = tmp
+
+RESOURCES = config.qrc
+
 
 INCLUDEPATH += include/
 
@@ -22,6 +26,7 @@ HEADERS = \
     include/config-edit.h \
     include/cmdoptions.h \
     include/editor.h \
+    include/configview.h
 
 SOURCES = \
   src/main.cpp \
@@ -29,4 +34,5 @@ SOURCES = \
     src/deliberate.cpp \
     src/config-edit.cpp \
     src/cmdoptions.cpp \
-    src/editor.cpp
+    src/editor.cpp \
+    src/configview.cpp

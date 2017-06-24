@@ -59,7 +59,6 @@ QmlConfigEdit::ConfigItem::ConfigItem (const QmlConfigEdit::ConfigItem & other)
 QmlConfigEdit::QmlConfigEdit (QObject * parent)
   :QAbstractListModel (parent)
 {
-  exemptGroups << "sizes" ;
   m_roles[Type_Group] = "confGroup";
   m_roles[Type_Key] = "confKey";
   m_roles[Type_Value] = "confValue";
@@ -116,12 +115,6 @@ QHash<int, QByteArray> QmlConfigEdit::roleNames() const
   return m_roles;
 }
 
-void
-QmlConfigEdit::Run ()
-{
-  Load ();
-}
-
 int 
 QmlConfigEdit::rowCount (const QModelIndex & parent) const
 {
@@ -132,39 +125,52 @@ QmlConfigEdit::rowCount (const QModelIndex & parent) const
 
 
 void
-QmlConfigEdit::Load ()
+QmlConfigEdit::Load (const QString &fileName)
 {
-  qDebug () << "QmlConfigEdit::Load" ;
+  qDebug () <<Q_FUNC_INFO ;
   int nr = rowCount();
   beginResetModel ();
   if (nr > 0) {
     removeRows (0,nr-1);
     configRows.clear ();
   }
-  QSettings & Zett = Settings();
+  m_fileName = fileName;
+  m_zett = new QSettings(fileName,QSettings::NativeFormat);
+  qDebug()<< Q_FUNC_INFO << "\n\t" << m_zett;
   QString   name;
   QVariant  data;
-  QStringList top = Zett.childKeys ();
+  QStringList top = m_zett->childKeys ();
   QStringList::iterator topit;
 
-  QStringList groups = Zett.childGroups();
+  QStringList groups = m_zett->childGroups();
   QStringList::iterator  grit, subit;
   int level (0);
+  QStringList keys = m_zett->childKeys(); // top level
+  qDebug() << "top level keys are " << keys;
+  int i; QString k;
+  int sz=keys.size();
+  for (i=0, k=keys.at(i); i<sz; k=keys.at(i),++i) {
+    qDebug() << "key " << k;
+    QVariant val = m_zett->value(k);
+    addRow (ConfigItem ("General", k, val, ConfigItem::Kind_Header, 0));
+  }
+  qDebug() << "groups are " << groups;
   for (grit = groups.begin(); grit != groups.end(); grit++) {
     QString group (*grit);
+    qDebug() << "group" << group;
     if (exemptGroups.contains (group)) {
       qDebug () << "     Exempt";
       continue;
     }
     addRow (ConfigItem ("", group, QVariant(""), ConfigItem::Kind_Header, level));
-    Zett.beginGroup (group);
-    QStringList subs = Zett.childKeys ();
+    m_zett->beginGroup (group);
+    QStringList subs = m_zett->childKeys ();
     for (subit = subs.begin(); subit != subs.end(); subit++) {
       name = *subit;
-      data = Zett.value(name); 
+      data = m_zett->value(name);
       addRow (ConfigItem (group, name, data, ConfigItem::Kind_Value, level+1));
     }
-    Zett.endGroup ();
+    m_zett->endGroup ();
   }
   beginInsertRows (QModelIndex(), nr, nr);
   endInsertRows ();
@@ -175,6 +181,7 @@ void
 QmlConfigEdit::addRow (const ConfigItem & item)
 {
   configRows << item;
+  qDebug() << Q_FUNC_INFO << item.toString();
 }
 
 void
@@ -198,7 +205,7 @@ QmlConfigEdit::didChangeData (const QModelIndex & ul, const QModelIndex & lr)
 void
 QmlConfigEdit::loadView ()
 {
-  Load ();
+  Load (m_fileName);
 }
 
 void
@@ -225,7 +232,7 @@ void
 QmlConfigEdit::Save ()
 {
   QMessageBox::warning (0,"Warning", "QmlConfigEdit::Save incomplete");
-  //Zett.sync();
+  m_zett->sync();
 }
 
 void
@@ -241,7 +248,7 @@ QmlConfigEdit::updateValue (const QString & group,
   } else {
     qDebug () << " Cannot update Settings " << realKey;
   }
-  Load ();
+  Load (m_fileName);
 }
 
 

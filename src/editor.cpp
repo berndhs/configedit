@@ -24,7 +24,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 Editor::Editor(QApplication & app,
                QWidget *parent) :
   QWidget(parent),
-  m_app(&app)
+  m_app(&app),
+  m_edit(Q_NULLPTR)
 {
   qDebug() << Q_FUNC_INFO << m_app << parent;
 }
@@ -38,6 +39,8 @@ Editor::~Editor()
 void Editor::run(const QString &fn)
 {
   qDebug() << Q_FUNC_INFO << fn;
+  m_edit = new deliberate::QmlConfigEdit (this);
+  m_edit->Load(fn);
 }
 
 void Editor::quit()
