@@ -71,7 +71,7 @@ main (int argc, char *argv[])
   Editor editor (app);
   editor.run(arglist[0]);
 
-  QTimer::singleShot(10000,&editor,SLOT(quit()));
+//  QTimer::singleShot(10000,&editor,SLOT(quit()));
 
   result = app.exec();
 

@@ -92,6 +92,6 @@ void Editor::connectSigs()
   QQuickItem * root = m_viewer->rootObject();
   qDebug() << Q_FUNC_INFO << " root is at " << root;
   connect (root,SIGNAL(doneConfig()),this,SLOT(wantSave()));
-  connect (root,SIGNAL(restartConfig()),this,SLOT(wantRestrt()));
-  connect (root,SIGNAL(reloadConfig()),this,SLOT(wantReload()));
+  connect (root,SIGNAL(restartConfig()),this,SLOT(wantRestart()));
+  connect (root,SIGNAL(resetConfig()),this,SLOT(wantReload()));
 }

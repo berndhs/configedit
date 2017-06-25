@@ -26,6 +26,9 @@ import QtQuick.Controls 2.0
 Rectangle {
     id: configListRect
   property real normalWidth: 800
+    property real keyWidth: 75;
+    property real listWidth:500;
+    property real listHeight: 300;
   property real widthRatio: 0.25
   property real keyFieldWidth: normalWidth*widthRatio
   property real valueFieldWidth: normalWidth*(1 - widthRatio)
@@ -70,12 +73,16 @@ Rectangle {
     to: 1
     duration: shrinkDelay
   }
-  Rectangle {
+  Row {
     id: buttonRow
     height: childrenRect.height
     width: childrenRect.width
-    anchors { horizontalCenter: parent.horizontalCenter }
-    color: "transparent"
+    spacing: 30;
+    anchors {
+        top: configListRect.top;
+        left: configListRect.left;
+        leftMargin: buttonRow.spacing;
+    }
     Button {
       id: saveConfigButton
       height: itemHeight * 1.2
@@ -83,20 +90,30 @@ Rectangle {
       text: qsTr("Restart")
       onClicked: { console.log ("Restart config clicked "); restartConfig() }
     }
+    Rectangle {
+        width: 150;
+        height: 40;
+        color: "lightgreen";
+        Text {
+            id: counterText;
+            font.pixelSize: 23;
+            anchors.centerIn: parent;
+            text: configModel.rowCount() + " items";
+        }
+    }
+
     Button {
       id: doneConfigButton
-      anchors { left: saveConfigButton.right }
       height: itemHeight * 1.2
 //      radius: height * 0.3333
-      text: qsTr("Done")
+      text: qsTr("Save")
       onClicked: { console.log ("Done config clicked "); doneConfig () }
     }
     Button {
       id: resetConfigButton
-      anchors { left: doneConfigButton.right }
       height: itemHeight * 1.2
 //      radius: height * 0.3333
-      text: qsTr("Reset to Defaults")
+      text: qsTr("Back to Defaults")
       onClicked: { console.log ("Reset config clicked "); resetConfig (); }
     }
   }
@@ -105,13 +122,13 @@ Rectangle {
     Rectangle {
       width: parent.width
       height: itemHeight; 
-      color: "transparent"
+      color: "green"
       anchors.topMargin: 2
       Column { 
         id: keyColumn
         anchors.topMargin: 4
         height: itemHeight
-        width: keyFieldWidth   
+        width: keyWidth;
         Rectangle {
           id: keyColumnRect
           anchors { topMargin: 2 }
@@ -143,7 +160,7 @@ Rectangle {
           TextInput {
             id: valueField
             width: parent.width - 2
-            enabled: confHasValue
+            enabled: true; //confHasValue
             autoScroll: true
             text:  confValue
             selectByMouse: true
@@ -165,20 +182,29 @@ Rectangle {
       }
     }
   }
-  ListView {
-    id: configListView
-    visible: true
-    delegate: verticalConfigDelegate
-    clip: true
-    width: parent.width 
-    height: parent.height -itemHeight - buttonRow.height
-    currentIndex: -1
-    contentWidth: childrenRect.width; contentHeight: childrenRect.height
-    anchors.top: buttonRow.bottom
-    anchors.topMargin: 6
-    orientation: ListView.Vertical
-    model: configModel
-    snapMode: ListView.SnapToItem
-    highlight: Rectangle { color: "#ffbbbb"}
+
+  Rectangle {
+      id: listBox;
+      color: "white";
+      border.color: "green";
+      border.width: 2;
+      anchors.top: buttonRow.bottom
+      anchors.topMargin: 6
+      width: configListRect.listWidth
+      height: configListRect.listHeight
+      ListView {
+          id: configListView
+          visible: true
+          delegate: verticalConfigDelegate
+          clip: true
+          width: configListRect.listWidth
+          height: configListRect.listHeight -itemHeight - buttonRow.height
+          currentIndex: -1
+          contentWidth: childrenRect.width; contentHeight: childrenRect.heigh
+          orientation: ListView.Vertical
+          model: configModel
+          snapMode: ListView.SnapToItem
+          highlight: Rectangle { color: "#ffbbbb"}
+      }
   }
 }

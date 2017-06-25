@@ -100,7 +100,7 @@ QmlConfigEdit::data (const QModelIndex & index, int role) const
     retval = QVariant(configRows[row].group);
     break;
   case int(Type_Value):
-    retval = (hasValue? configRows[row].value : QString(""));
+    retval = (hasValue? configRows[row].value.toString() : QString(""));
     break;
   case int(Type_HasValue):
     retval = QVariant (hasValue).toString();
