@@ -24,6 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QWidget>
 #include "config-edit.h"
+#include "configview.h"
 
 class Editor : public QWidget
 {
@@ -36,15 +37,23 @@ public:
 
 
 
+
 signals:
 
 public slots:
 
   void quit();
+  void wantSave();
+  void wantReload();
+  void wantRestart();
 
 private:
+
+  void connectSigs();
+
   QApplication  *m_app;
   deliberate::QmlConfigEdit *m_edit;
+  ConfigView                *m_viewer;
 
 };
 

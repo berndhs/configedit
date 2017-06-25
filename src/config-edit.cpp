@@ -103,7 +103,7 @@ QmlConfigEdit::data (const QModelIndex & index, int role) const
     retval = (hasValue? configRows[row].value : QString(""));
     break;
   case int(Type_HasValue):
-    retval = QVariant (hasValue);
+    retval = QVariant (hasValue).toString();
   default:  
     break;
   }

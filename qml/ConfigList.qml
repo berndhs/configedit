@@ -19,10 +19,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
-import QtQuick 1.1
+import QtQuick 2.2
+import QtQuick.Controls 2.0
 
-Rectangle { 
-  property real normalWidth: parent.width
+
+Rectangle {
+    id: configListRect
+  property real normalWidth: 800
   property real widthRatio: 0.25
   property real keyFieldWidth: normalWidth*widthRatio
   property real valueFieldWidth: normalWidth*(1 - widthRatio)
@@ -48,14 +51,13 @@ Rectangle {
     expandScale.running = true
     isShown = true
   }
-  id: configListRect
   color: "transparent"
-  anchors.top: parent.top
-  anchors.left: parent.left
-  anchors.topMargin: 0
-  anchors.leftMargin: leftMargin
-  width: parent.width - leftMargin
-  height: parent.height
+//  anchors.top: configListRect.top
+//  anchors.left: configListRect.left
+////  anchors.topMargin: 0
+////  anchors.leftMargin: leftMargin
+//  width: configListRect.width - leftMargin
+//  height: configListRect.height
   PropertyAnimation on scale { 
     id: shrinkScale
     running: false
@@ -74,27 +76,27 @@ Rectangle {
     width: childrenRect.width
     anchors { horizontalCenter: parent.horizontalCenter }
     color: "transparent"
-    ChoiceButton {
+    Button {
       id: saveConfigButton
       height: itemHeight * 1.2
-      radius: height * 0.3333
-      labelText: qsTr("Restart")
+//      radius: height * 0.3333
+      text: qsTr("Restart")
       onClicked: { console.log ("Restart config clicked "); restartConfig() }
     }
-    ChoiceButton {
+    Button {
       id: doneConfigButton
       anchors { left: saveConfigButton.right }
       height: itemHeight * 1.2
-      radius: height * 0.3333
-      labelText: qsTr("Done")
+//      radius: height * 0.3333
+      text: qsTr("Done")
       onClicked: { console.log ("Done config clicked "); doneConfig () }
     }
-    ChoiceButton {
+    Button {
       id: resetConfigButton
       anchors { left: doneConfigButton.right }
       height: itemHeight * 1.2
-      radius: height * 0.3333
-      labelText: qsTr("Reset to Defaults")
+//      radius: height * 0.3333
+      text: qsTr("Reset to Defaults")
       onClicked: { console.log ("Reset config clicked "); resetConfig (); }
     }
   }

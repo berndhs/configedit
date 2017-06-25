@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file alias="ConfigList.qml">qml/ConfigList.qml</file>
         <file alias="ChoiceButton.qml">qml/ChoiceButton.qml</file>
-        <file>qml/ConfViewer.qml</file>
-        <file>qml/ConfViewerForm.ui.qml</file>
+        <file alias="BigBox.qml">qml/BixBox.qml</file>
     </qresource>
 </RCC>

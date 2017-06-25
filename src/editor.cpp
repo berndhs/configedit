@@ -20,20 +20,29 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
  ****************************************************************/
 #include <QDebug>
+#include <QQmlContext>
+#include <QQuickItem>
+#include "configview.h"
 
 Editor::Editor(QApplication & app,
                QWidget *parent) :
   QWidget(parent),
   m_app(&app),
-  m_edit(Q_NULLPTR)
+  m_edit(Q_NULLPTR),
+  m_viewer(Q_NULLPTR)
 {
   qDebug() << Q_FUNC_INFO << m_app << parent;
 }
 
 Editor::~Editor()
 {
-
   qDebug() << Q_FUNC_INFO ;
+  if (m_edit) {
+    m_edit->deleteLater();
+  }
+  if (m_viewer) {
+    m_viewer->deleteLater();
+  }
 }
 
 void Editor::run(const QString &fn)
@@ -41,6 +50,13 @@ void Editor::run(const QString &fn)
   qDebug() << Q_FUNC_INFO << fn;
   m_edit = new deliberate::QmlConfigEdit (this);
   m_edit->Load(fn);
+  m_viewer = new ConfigView;
+  QQmlContext *ctxt = m_viewer->rootContext();
+  ctxt->setContextProperty("configModel",m_edit);
+  m_viewer->setResizeMode(QQuickView::SizeViewToRootObject);
+  m_viewer->setSource(QUrl("qrc:/BigBox.qml"));
+  connectSigs();
+  m_viewer->show();
 }
 
 void Editor::quit()
@@ -50,4 +66,32 @@ void Editor::quit()
   } else {
     exit(1);
   }
+}
+
+void Editor::wantSave()
+{
+  qDebug() << Q_FUNC_INFO ;
+  if (m_edit) {
+    m_edit->saveView();
+  }
+  quit();
+}
+
+void Editor::wantReload()
+{
+  qDebug() << Q_FUNC_INFO ;
+}
+
+void Editor::wantRestart()
+{
+  qDebug() << Q_FUNC_INFO ;
+}
+
+void Editor::connectSigs()
+{
+  QQuickItem * root = m_viewer->rootObject();
+  qDebug() << Q_FUNC_INFO << " root is at " << root;
+  connect (root,SIGNAL(doneConfig()),this,SLOT(wantSave()));
+  connect (root,SIGNAL(restartConfig()),this,SLOT(wantRestrt()));
+  connect (root,SIGNAL(reloadConfig()),this,SLOT(wantReload()));
 }

@@ -31,4 +31,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include "deliberate.h"
 #include "cmdoptions.h"
 #include "editor.h"
+#include "configview.h"
+
 #endif
