@@ -71,6 +71,7 @@ private:
       Kind_None = 0,
       Kind_Header = 1,
       Kind_Value  = 2,
+      Kind_TypeName = 3,
       Kind_Bad
     };
 
@@ -101,7 +102,8 @@ private:
      Type_Key = Qt::UserRole+101,
      Type_Value = Qt::UserRole+102,
      Type_HasValue = Qt::UserRole+103,
-     Type_Level = Qt::UserRole+104
+     Type_Level = Qt::UserRole+104,
+     Type_TypeName = Qt::UserRole+105
   };
 
 

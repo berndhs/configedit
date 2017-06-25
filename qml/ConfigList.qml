@@ -25,8 +25,7 @@ import QtQuick.Controls 2.0
 
 Rectangle {
     id: configListRect
-  property real normalWidth: 800
-    property real keyWidth: 75;
+  property real normalWidth: 800;
     property real listWidth:500;
     property real listHeight: 300;
   property real widthRatio: 0.25
@@ -44,6 +43,7 @@ Rectangle {
   signal restartConfig ()
   signal doneConfig ()
   signal resetConfig ()
+  signal gedit()
   function hide () {
     console.log ("ConfList hide")
     shrinkScale.running = true
@@ -116,6 +116,14 @@ Rectangle {
       text: qsTr("Back to Defaults")
       onClicked: { console.log ("Reset config clicked "); resetConfig (); }
     }
+    Button {
+        id: geditButton
+        height: itemHeight *1.2
+        text: qsTr("Gedit")
+        onReleased: {
+            gedit();
+        }
+    }
   }
   Component {
     id: verticalConfigDelegate
@@ -128,7 +136,7 @@ Rectangle {
         id: keyColumn
         anchors.topMargin: 4
         height: itemHeight
-        width: keyWidth;
+        width: keyFieldWidth;
         Rectangle {
           id: keyColumnRect
           anchors { topMargin: 2 }
@@ -143,6 +151,14 @@ Rectangle {
             text:  (confHasValue ? "..." + confKey : "<b>" + confKey + "</b" )
           }
         } 
+        Rectangle {
+            id: tyepTag;
+            color: "yellow";
+            Text {
+                anchors.left: parent.left;
+                text: typeName;
+            }
+        }
       }
       Column {
         id: valueColumn
@@ -197,10 +213,11 @@ Rectangle {
           visible: true
           delegate: verticalConfigDelegate
           clip: true
-          width: configListRect.listWidth
-          height: configListRect.listHeight -itemHeight - buttonRow.height
+          width: configListRect.listWidth - 4
+          height: configListRect.listHeight -itemHeight - buttonRow.height -4
           currentIndex: -1
-          contentWidth: childrenRect.width; contentHeight: childrenRect.heigh
+          contentWidth: childrenRect.width;
+          contentHeight: childrenRect.height
           orientation: ListView.Vertical
           model: configModel
           snapMode: ListView.SnapToItem

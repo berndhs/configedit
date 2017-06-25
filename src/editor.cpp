@@ -22,6 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QQmlContext>
 #include <QQuickItem>
+#include <QProcess>
+#include <QtGlobal>
+
 #include "configview.h"
 
 Editor::Editor(QApplication & app,
@@ -29,7 +32,8 @@ Editor::Editor(QApplication & app,
   QWidget(parent),
   m_app(&app),
   m_edit(Q_NULLPTR),
-  m_viewer(Q_NULLPTR)
+  m_viewer(Q_NULLPTR),
+  m_process(Q_NULLPTR)
 {
   qDebug() << Q_FUNC_INFO << m_app << parent;
 }
@@ -45,9 +49,11 @@ Editor::~Editor()
   }
 }
 
-void Editor::run(const QString &fn)
+void
+Editor::run(const QString &fn)
 {
   qDebug() << Q_FUNC_INFO << fn;
+  m_fileName = fn;
   m_edit = new deliberate::QmlConfigEdit (this);
   m_edit->Load(fn);
   m_viewer = new ConfigView;
@@ -59,7 +65,8 @@ void Editor::run(const QString &fn)
   m_viewer->show();
 }
 
-void Editor::quit()
+void
+Editor::quit()
 {
   if (m_app) {
     m_app->quit();
@@ -68,7 +75,8 @@ void Editor::quit()
   }
 }
 
-void Editor::wantSave()
+void
+Editor::wantSave()
 {
   qDebug() << Q_FUNC_INFO ;
   if (m_edit) {
@@ -77,21 +85,48 @@ void Editor::wantSave()
   quit();
 }
 
-void Editor::wantReload()
+void
+Editor::wantReload()
 {
   qDebug() << Q_FUNC_INFO ;
 }
 
-void Editor::wantRestart()
+void
+Editor::wantRestart()
 {
   qDebug() << Q_FUNC_INFO ;
 }
 
-void Editor::connectSigs()
+void
+Editor::wantGedit()
+{
+  if (!m_process) {
+    m_process = new QProcess(this);
+    QString editorName ("gedit");
+    QByteArray edName = qgetenv("EDITOR");
+    if (!edName.isEmpty()) {
+      editorName = QString::fromLocal8Bit(edName);
+    }
+    m_process->setProgram("gedit");
+    connect (m_process,SIGNAL(finished(int)),this,SLOT(doneGedit()));
+    m_process->setArguments(QStringList(m_fileName));
+    m_process->start();
+  }
+}
+
+void Editor::doneGedit()
+{
+  m_process = Q_NULLPTR;
+  quit();
+}
+
+void
+Editor::connectSigs()
 {
   QQuickItem * root = m_viewer->rootObject();
   qDebug() << Q_FUNC_INFO << " root is at " << root;
   connect (root,SIGNAL(doneConfig()),this,SLOT(wantSave()));
   connect (root,SIGNAL(restartConfig()),this,SLOT(wantRestart()));
   connect (root,SIGNAL(resetConfig()),this,SLOT(wantReload()));
+  connect (root,SIGNAL(gedit()),this,SLOT(wantGedit()));
 }

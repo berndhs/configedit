@@ -4,6 +4,7 @@ TEMPLATE = app
 TARGET = cfgedit
 
 QT += gui quick widgets
+QT -= dbus
 
 CONFIG += c++11
 
@@ -18,7 +19,7 @@ RESOURCES = config.qrc
 INCLUDEPATH += include/
 
 HEADERS = \
-  include/agpl.h \
+  include/agpl2.h \
   include/main.h \
     include/version.h \
     include/agpl2.h \

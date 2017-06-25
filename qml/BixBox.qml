@@ -8,6 +8,7 @@ Item {
     signal restartConfig ()
     signal doneConfig ()
     signal resetConfig ()
+    signal gedit()
     ConfigList {
         normalWidth: parent.width;
         anchors.top: parent.top;
@@ -17,6 +18,9 @@ Item {
         onRestartConfig: {biggestBox.restartConfig();}
         onDoneConfig: {biggestBox.doneConfig(); console.log("forwarded doneConfig()");}
         onResetConfig:{ biggestBox.resetConfig();}
+        onGedit: {
+            biggestBox.gedit();
+        }
     }
 
 }

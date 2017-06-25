@@ -69,7 +69,19 @@ main (int argc, char *argv[])
   QApplication  app (argc, argv);
 
   Editor editor (app);
-  editor.run(arglist[0]);
+  if (arglist.count() < 1) {
+    QString file = QFileDialog::getOpenFileName(0,
+                      QString("Config file to edit"),
+                      QString("%1/.config/%2/")
+                             .arg(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))
+                             .arg(app.organizationName()),
+                      QString ("*.conf"));
+    if (!file.isEmpty()) {
+      editor.run(file);
+    }
+  } else {
+    editor.run(arglist[0]);
+  }
 
 //  QTimer::singleShot(10000,&editor,SLOT(quit()));
 

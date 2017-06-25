@@ -64,6 +64,7 @@ QmlConfigEdit::QmlConfigEdit (QObject * parent)
   m_roles[Type_Value] = "confValue";
   m_roles[Type_HasValue] = "confHasValue";
   m_roles[Type_Level]  = "confLevel";
+  m_roles[Type_TypeName] = "typeName";
   connect (this, SIGNAL (rowsInserted(const QModelIndex &, int, int)),
            this, SLOT (didInsertRows  (const QModelIndex &, int, int)));
   connect (this, SIGNAL (modelReset()),
@@ -92,20 +93,24 @@ QmlConfigEdit::data (const QModelIndex & index, int role) const
   QVariant retval ;
   bool hasValue = configRows[row].kind == ConfigItem::Kind_Value;
   switch (role) {
-  case Qt::DisplayRole:
-  case int(Type_Key):
-    retval = QVariant(configRows[row].key);
-    break;
-  case int (Type_Group):
-    retval = QVariant(configRows[row].group);
-    break;
-  case int(Type_Value):
-    retval = (hasValue? configRows[row].value.toString() : QString(""));
-    break;
-  case int(Type_HasValue):
-    retval = QVariant (hasValue).toString();
-  default:  
-    break;
+    case Qt::DisplayRole:
+    case int(Type_Key):
+      retval = QVariant(configRows[row].key);
+      break;
+    case int (Type_Group):
+      retval = QVariant(configRows[row].group);
+      break;
+    case int(Type_Value):
+      retval = (hasValue? configRows[row].value.toString() : QString(""));
+      break;
+    case int(Type_HasValue):
+      retval = QVariant (hasValue);
+      break;
+    case int(Type_TypeName):
+      retval = QVariant(configRows[row].value.typeName());
+      break;
+    default:
+      break;
   }
   return retval;
 }
@@ -241,10 +246,10 @@ QmlConfigEdit::updateValue (const QString & group,
                                 const QVariant & value)
 {
   QString realKey (QString ("%1/%2").arg(group).arg(key));
-  if (Settings().contains (realKey)) {
-    Settings().setValue (realKey, value);
+  if (m_zett->contains (realKey)) {
+    m_zett->setValue (realKey, value);
     qDebug () << " updated Settings " << realKey << " to " << value;
-    qDebug () << " is now " << Settings().value (realKey);
+    qDebug () << " is now " << m_zett->value (realKey);
   } else {
     qDebug () << " Cannot update Settings " << realKey;
   }

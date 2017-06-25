@@ -23,6 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QString>
 #include <QWidget>
+#include <QProcess>
 #include "config-edit.h"
 #include "configview.h"
 
@@ -46,6 +47,8 @@ public slots:
   void wantSave();
   void wantReload();
   void wantRestart();
+  void wantGedit();
+  void doneGedit();
 
 private:
 
@@ -54,6 +57,8 @@ private:
   QApplication  *m_app;
   deliberate::QmlConfigEdit *m_edit;
   ConfigView                *m_viewer;
+  QString                   m_fileName;
+  QProcess                  *m_process;
 
 };
 

@@ -25,8 +25,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QString>
 #include <QStringList>
+#include <QStandardPaths>
+#include <QDir>
 #include <QDebug>
 #include <QTimer>
+#include <QFileDialog>
 #include "version.h"
 #include "deliberate.h"
 #include "cmdoptions.h"
