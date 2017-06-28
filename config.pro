@@ -2,6 +2,8 @@
 
 TEMPLATE = app
 TARGET = cfgedit
+target.path = /usr/bin
+INSTALLS += target
 
 QT += gui quick widgets
 QT -= dbus
